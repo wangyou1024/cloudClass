@@ -1,0 +1,24 @@
+.wrap{
+    padding: 20px 20px 20px 40px;
+    border: 1px solid #E2E6ED;
+    border-radius: 8px;
+    background: #FFF;
+    margin: 0 0 10px 0 !important;
+}
+#detail .ant-tabs-bar{
+    border-bottom: 1px solid #ffffff !important;
+}
+#detail .ant-tabs-nav-wrap{
+    padding:10px 10px 0 40px;
+    background-color: #f7f7f7;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 0;
+}
+
+#detail .ant-collapse-no-arrow{
+    background-color: #FFFFFF;
+}
+#detail .ant-collapse-header{
+    height: 50px;
+    padding: 12px 0 12px 0;
+}
