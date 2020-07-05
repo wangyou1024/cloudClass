@@ -1,0 +1,15 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.StudentMapper">
+    <update id="update" parameterType="Student">
+        update student set sphone=#{sphone},spassword=#{spassword},semail=#{semail},sname=#{sname},scollege=#{scollege},snum=#{snum}, simage=#{simage} where sid=#{sid}
+    </update>
+    <!--注册用户-->
+    <insert id="save" parameterType="Student" useGeneratedKeys="true" keyProperty="sid">
+        insert into student (sid,sphone,semail,spassword,snum,sname,scollege) values (#{sid},#{sphone},#{semail},#{spassword},#{snum},#{sname},#{scollege})
+    </insert>
+    <select id="findByPhone" parameterType="java.lang.String" resultType="Student">
+        select * from student where sphone=#{phone}
+    </select>
+</mapper>

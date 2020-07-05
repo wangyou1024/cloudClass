@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.CourseMapper">
+    <insert id="insert" parameterType="Course" useGeneratedKeys="true" keyProperty="cid">
+        insert into course (cid,tid,cname,cdate,cnum,invite,archive) values (#{cid},#{tid},#{cname},#{cdate},#{cnum},#{invite},#{archive})
+    </insert>
+    <select id="findByInvite" parameterType="java.lang.String" resultType="Course">
+        select * from course where invite=#{courseCode}
+    </select>
+    <select id="getCourseByTeacher" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select course.cid as cid, tc.tcid as tcid,course.cname as cname,course.invite as invite, course.cdate as cdate, course.tid as tid, teacher.tname as tname, teacher.tphone as tphone from tc LEFT JOIN course ON tc.cid = course.cid LEFT JOIN teacher ON course.tid=teacher.tid where tc.tid=#{tid} and tc.tarchive=0 and course.archive=0 order by tc.tsort
+    </select>
+    <select id="getCourseByStudent" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select course.cid as cid, sc.scid as scid,course.cname as cname,course.invite as invite, course.cdate as cdate, course.tid as tid, teacher.tname as tname, teacher.tphone as tphone from sc LEFT JOIN course ON sc.cid = course.cid LEFT JOIN teacher ON course.tid=teacher.tid where sc.sid=#{sid} and sc.sarchive=0 and course.archive=0 order by sc.sort
+    </select>
+    <update id="archiveCourse">
+        update course set archive=#{archive} where cid=#{cid}
+    </update>
+    <update id="deleteCourse" parameterType="java.lang.String">
+        update course set archive=2 where cid=#{cid}
+    </update>
+    <update id="updateCourse">
+        update course set cname=#{cname}, cdate=#{cdate} where cid=#{cid}
+    </update>
+    <update id="coursePeopleAdd">
+        update course set cnum=cnum+1 where cid=#{cid}
+    </update>
+    <select id="selectCourseTeacher" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select teacher.timage as image,teacher.tname as tname,teacher.tid as tid,teacher.tphone as tphone,tc.job as job from tc left join teacher on teacher.tid=tc.tid where tc.cid=#{cid}
+    </select>
+    <select id="selectCourseSelect" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select student.simage as image,student.sname as sname,student.sid as sid,student.semail as semail,student.snum as snum,sc.scid as scid from sc left join student on student.sid=sc.sid where sc.cid=#{cid}
+    </select>
+    <update id="coursePeopleDel">
+        update course set cnum=cnum-1 where cid=#{cid}
+    </update>
+    <select id="selectCourseGrade" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select student.sid,student.sname,student.snum,ts.allsum from student,sc left join
+        (select swork.sid,sum(twork.scale*swork.score) allsum from twork, swork where twork.cid=#{cid} and twork.twid = swork.twid group by swork.sid,twork.scale,swork.score) as ts
+        on sc.sid = ts.sid where sc.cid=#{cid} and student.sid = sc.sid
+    </select>
+<!--    王游-->
+    <select id="findById" parameterType="java.lang.String" resultType="Course">
+        select cid,tid,cname,cdate,cnum,invite,archive from course where cid=#{id};
+    </select>
+    <update id="updateNameById" parameterType="Map">
+        update course set cname=#{name} where cid=#{id};
+    </update>
+</mapper>

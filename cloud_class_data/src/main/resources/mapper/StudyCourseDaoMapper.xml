@@ -1,0 +1,29 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.StudyCourseMapper">
+    <select id="getCourseByStudent" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select course.cid as cid, sc.scid as scid,course.cname as cname,course.invite as invite, course.cdate as cdate, course.tid as tid, teacher.tname as tname, teacher.tphone as tphone from sc LEFT JOIN course ON sc.cid = course.cid LEFT JOIN teacher ON course.tid=teacher.tid where sc.sid=#{sid} and sc.sarchive=0 and course.archive=0 order by sc.sort
+    </select>
+    <insert id="insert" parameterType="StudyCourse" useGeneratedKeys="true" keyProperty="scid">
+        insert into sc (scid,cid,sid,grade,sarchive,sort) values (#{scid},#{cid},#{sid},#{grade},#{sarchive},#{sort})
+    </insert>
+    <select id="sizeBySid" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select max(sort) as countCourse from sc where sid=#{sid}
+    </select>
+    <update id="archiveCourse">
+        update sc set sarchive=#{archive} where scid=#{scId}
+    </update>
+    <select id="findById" parameterType="java.lang.String" resultType="StudyCourse">
+        select * from sc where scid=#{scId}
+    </select>
+    <select id="findByCondition" parameterType="java.lang.String" resultType="StudyCourse">
+        select * from sc where cid=#{cid} and sid=#{sid}
+    </select>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from sc where scid=#{scId}
+    </delete>
+    <select id="selectArchiveCourse" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select sc.scid as scid, sc.sid as sid, course.cname as cname, course.cid as cid from sc left join course on course.cid=sc.cid where sc.sid=#{sid} and sc.sarchive=1 and sc.cid in (select cid from course where archive=0)
+    </select>
+</mapper>

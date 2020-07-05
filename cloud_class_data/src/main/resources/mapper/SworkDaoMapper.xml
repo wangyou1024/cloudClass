@@ -1,0 +1,47 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.SworkMapper">
+    <select id="getLock" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from (select twid,sid from twork,sc where twork.cid = sc.cid and twid = #{twid}) cw left join
+swork on cw.sid = swork.sid and swork.twid=#{twid} where swid is null;
+    </select>
+    <select id="getNeedCorrect" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from swork where twid = #{twid} and correct = 0
+    </select>
+    <select id="getCorrected" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from swork where twid = #{twid} and correct = 1
+    </select>
+    <delete id="deleteByTwid" parameterType="java.lang.String">
+        delete from swork where twid = #{twid};
+    </delete>
+    <select id="getSubmit" parameterType="java.lang.String" resultType="map">
+        select swid,twid,ssc.sid,snum,sname,scontent,spublish,correct,score,correction
+        from (select student.sid,student.sname,student.snum
+        from student,sc where student.sid = sc.sid and sc.cid=(
+        select cid from twork where twid = #{twid})) ssc
+        left join swork on ssc.sid = swork.sid and twid=#{twid}
+        where spublish is not null;
+    </select>
+    <select id="getNoSubmit" parameterType="java.lang.String" resultType="map">
+        select swid,twid,ssc.sid,snum,sname,scontent,spublish,correct,score,correction
+        from (select student.sid,student.sname,student.snum
+        from student,sc where student.sid = sc.sid and sc.cid=(
+        select cid from twork where twid = #{twid})) ssc
+        left join swork on ssc.sid = swork.sid and twid=#{twid}
+        where spublish is null;
+    </select>
+    <update id="updateCorrection" parameterType="map">
+        update swork set correction = #{correction},correct=1 where swid=#{swid}
+    </update>
+    <update id="updateScore" parameterType="map">
+        update swork set score = #{score} where swid=#{swid}
+    </update>
+    <update id="updateSContent" parameterType="map">
+        update swork set scontent=#{scontent} where swid=#{swid}
+    </update>
+    <insert id="insert" parameterType="Swork">
+        insert into swork (swid,twid,sid,scontent,spublish,correct,score,correction)
+        values (#{swid},#{twid},#{sid},#{scontent},#{spublish},#{correct},#{score},#{correction})
+    </insert>
+</mapper>

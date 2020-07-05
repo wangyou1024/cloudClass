@@ -1,0 +1,34 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.TworkMapper">
+    <select id="findWorksByCourseId" parameterType="java.lang.String" resultType="map">
+        select twid,tid,cid,wtitle,tcontent,tpublish,deadline,scale from twork where cid=#{id} order by tpublish desc
+    </select>
+    <select id="findWorkByTwid" parameterType="java.lang.String" resultType="map">
+        select twid,tid,cid,wtitle,tcontent,tpublish,deadline,scale from twork where twid=#{twid}
+    </select>
+    <update id="update" parameterType="Twork">
+        update twork set wtitle=#{wtitle}, tcontent=#{tcontent},
+        tpublish=#{tpublish},deadline=#{deadline},scale=#{scale} where twid=#{twid}
+    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from twork where twid=#{twid}
+    </delete>
+    <insert id="insert" parameterType="Twork">
+        insert into twork (twid,tid,cid,wtitle,tcontent,tpublish,deadline,scale) values
+        (#{twid},#{tid},#{cid},#{wtitle},#{tcontent},#{tpublish},#{deadline},#{scale})
+    </insert>
+    <select id="getWorkList" parameterType="java.lang.String" resultType="map">
+        select twid,wtitle from twork where cid = #{cid}
+    </select>
+    <select id="findWorksForStudent" parameterType="map" resultType="map">
+        select swid,scontent,correct,score,correction,tw.twid,tid,cid,wtitle,tcontent,tpublish,deadline,scale from (
+select twid,tid,cid,wtitle,tcontent,tpublish,deadline,scale from twork where cid=#{cid}) as tw left join (
+select * from swork where sid=(select sid from student where sphone=#{sid})) as sw
+on tw.twid = sw.twid
+    </select>
+    <select id="getLastWork" parameterType="java.lang.String" resultType="map">
+    select wtitle from twork where cid = #{cid}  order by TPUBLISH limit 1
+    </select>
+</mapper>

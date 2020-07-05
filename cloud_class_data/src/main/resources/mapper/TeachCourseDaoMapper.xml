@@ -1,0 +1,23 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangguo.mapper.TeachCourseMapper">
+    <insert id="insert" parameterType="TeachCourse" useGeneratedKeys="true" keyProperty="tcid">
+        insert into tc (tcid,cid,tid,tarchive,job,tsort) values (#{tcid},#{cid},#{tid},#{tarchive},#{job},#{tsort})
+    </insert>
+    <select id="findById" parameterType="java.lang.String" resultType="TeachCourse">
+        select * from tc where tcid=#{tcId}
+    </select>
+    <select id="findByCondition" parameterType="java.lang.String" resultType="TeachCourse">
+        select * from tc where cid=#{cid} and tid=#{tid}
+    </select>
+    <select id="sizeByTid" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select max(tsort) as countCourse from tc where tid=#{tid}
+    </select>
+    <update id="updateArchive">
+        update tc set tarchive=#{archive} where tcid=#{tcid}
+    </update>
+    <select id="selectArchiveCourse" parameterType="java.lang.String" resultType="java.util.HashMap">
+        select tc.tcid as tcid, tc.tid as tid, course.cname as cname, course.cid as cid from tc left join course on course.cid=tc.cid where tc.tid=#{tid} and (tc.tarchive=1 or tc.cid in (select cid from course where archive=1))
+    </select>
+</mapper>
