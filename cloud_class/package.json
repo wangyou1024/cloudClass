@@ -15,7 +15,7 @@
     "babel-plugin-import": "^1.13.0",
     "highlight.js": "^10.1.1",
     "marked": "^1.1.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "next": "9.4.4",
     "react": "16.13.1",
     "react-cookies": "^0.1.1",
